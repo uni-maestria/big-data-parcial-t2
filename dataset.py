@@ -74,9 +74,10 @@ class JointAugment:
             ch, cw = int(h * scale), int(w * scale)
             i = random.randint(0, h - ch)
             j = random.randint(0, w - cw)
-            image = TF.resized_crop(image, i, j, ch, cw, self.output_size,
+            size  = [self.output_size, self.output_size]
+            image = TF.resized_crop(image, i, j, ch, cw, size,
                                      interpolation=TF.InterpolationMode.BILINEAR)
-            mask  = TF.resized_crop(mask,  i, j, ch, cw, self.output_size,
+            mask  = TF.resized_crop(mask,  i, j, ch, cw, size,
                                      interpolation=TF.InterpolationMode.NEAREST)
         else:
             image = TF.resize(image, [self.output_size, self.output_size],
@@ -215,6 +216,33 @@ def load_drive(
     masks  = sorted((root / sub / "1st_manual").glob("*.gif"))
     fovs   = sorted((root / sub / "mask").glob("*.gif"))
 
+    # Detectar si el test set oficial no tiene anotaciones (descarga estándar de DRIVE).
+    test_has_no_masks = (split in ("train", "test")) and \
+        len(sorted((root / "test" / "1st_manual").glob("*.gif"))) == 0
+
+    if test_has_no_masks:
+        # Split 80/20 sobre el conjunto de entrenamiento.
+        import warnings
+        train_images = sorted((root / "training" / "images").glob("*.tif"))
+        train_masks  = sorted((root / "training" / "1st_manual").glob("*.gif"))
+        train_fovs   = sorted((root / "training" / "mask").glob("*.gif"))
+        n_val = max(1, int(0.2 * len(train_images)))
+        if split == "train":
+            images = train_images[:-n_val]
+            masks  = train_masks[:-n_val]
+            fovs   = train_fovs[:-n_val] if train_fovs else []
+        else:  # split == "test"
+            warnings.warn(
+                "No se encontraron máscaras en test/1st_manual/. "
+                "Usando el 20% final del conjunto de entrenamiento como validación."
+            )
+            images = train_images[-n_val:]
+            masks  = train_masks[-n_val:]
+            fovs   = train_fovs[-n_val:] if train_fovs else []
+
+    if split == "test" and len(masks) == 0:
+        pass  # ya manejado por test_has_no_masks arriba
+
     assert len(images) > 0, f"No se encontraron imágenes en {root/sub/'images'}"
 
     aug = JointAugment(output_size=output_size) if augment and split == "train" else None
@@ -225,8 +253,8 @@ def load_drive(
         augment=aug,
         use_clahe=use_clahe,
         output_size=output_size,
-        use_fov_mask=True,
-        fov_paths=fovs,
+        use_fov_mask=len(fovs) > 0,
+        fov_paths=fovs if fovs else None,
     )
     return DataLoader(ds, batch_size=batch_size, shuffle=(split == "train"),
                       num_workers=num_workers, pin_memory=True, drop_last=(split == "train"))
