@@ -89,3 +89,27 @@ Arterias/venas grandes & 0.903 & 0.914 \\
 \end{table}
 
 Los capilares finos son la categoría más difícil. Desde la arquitectura, esto se explica por tres factores: (i) las operaciones de \emph{pooling} degradan señales de uno o dos píxeles de ancho, (ii) los \emph{skip connections} sin control pueden mezclar ruido con detalle útil, y (iii) la función de pérdida sigue dominada por el fondo incluso después del reequilibrio. En contraste, los vasos gruesos mantienen continuidad espacial y alto contraste, por lo que son más fáciles de recuperar en el decoder.
+
+\subsection{Evidencia visual de la ejecución}
+Las Figuras~\ref{fig:exec-loss-deep}, \ref{fig:exec-extra-1} y \ref{fig:exec-extra-2} incorporan las salidas gráficas generadas durante la ejecución del proyecto. Estas evidencias complementan las tablas anteriores y dejan trazabilidad visual de los experimentos reportados.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{figures/001.png}
+\caption{Comparación de sensibilidad, especificidad, F1 y AUC-ROC por función de pérdida y uso de la variante \emph{Deep U-Net}, según la salida registrada en la ejecución.}
+\label{fig:exec-loss-deep}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.82\textwidth]{figures/002.png}
+\caption{Segunda visualización de resultados obtenida durante la ejecución y añadida como evidencia del comportamiento experimental del modelo.}
+\label{fig:exec-extra-1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.52\textwidth]{figures/003.png}
+\caption{Tercera visualización de resultados generada por la ejecución, incorporada en el informe como soporte gráfico complementario.}
+\label{fig:exec-extra-2}
+\end{figure}
