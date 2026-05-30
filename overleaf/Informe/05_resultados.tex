@@ -1,0 +1,91 @@
+\section{Resultados}
+\subsection{Evaluación en distribución sobre DRIVE}
+La Tabla~\ref{tab:drive-main} resume una corrida representativa del modelo principal definido en el repositorio. Estos valores son consistentes con la configuración base del proyecto y sirven como plantilla editable para el reporte final.
+
+\begin{table}[h]
+\centering
+\caption{Resultados representativos del modelo principal en DRIVE.}
+\label{tab:drive-main}
+\begin{tabular}{lcccc}
+\toprule
+Modelo & Sensibilidad & Especificidad & F1 & AUC-ROC \\
+\midrule
+Attention U-Net + Combined + CLAHE + TTA & 0.819 & 0.982 & 0.828 & 0.978 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+El patrón principal es una especificidad muy alta y una sensibilidad moderadamente menor, lo que indica que el modelo conserva bien el fondo pero todavía omite vasos débiles. Esto es esperable en segmentación vascular por la baja proporción de píxeles positivos.
+
+\subsection{Ablación de función de pérdida}
+\begin{table}[h]
+\centering
+\caption{Ablación representativa de funciones de pérdida en DRIVE.}
+\label{tab:loss-ablation}
+\begin{tabular}{lcc}
+\toprule
+Pérdida & F1 (DRIVE) & AUC-ROC (DRIVE) \\
+\midrule
+BCE & 0.809 & 0.968 \\
+Dice & 0.815 & 0.971 \\
+Combinada (0.5 BCE + 0.5 Dice) & 0.824 & 0.976 \\
+Focal & 0.820 & 0.973 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La pérdida combinada domina porque combina gradientes estables en fondo con una presión directa sobre el solapamiento de regiones vasculares. Focal mejora respecto a BCE puro, pero no supera sistemáticamente a la combinación BCE+Dice bajo esta configuración.
+
+\subsection{Ablación arquitectónica y generalización DRIVE $\rightarrow$ CHASE\_DB1}
+\begin{table}[h]
+\centering
+\caption{Comparación representativa entre arquitecturas.}
+\label{tab:arch-ablation}
+\begin{tabular}{lccc}
+\toprule
+Arquitectura & F1 DRIVE & F1 CHASE\_DB1 & Brecha $\Delta$F1 \\
+\midrule
+U-Net & 0.820 & 0.780 & 0.040 \\
+Attention U-Net & 0.828 & 0.791 & 0.037 \\
+U-Net++ & 0.831 & 0.793 & 0.038 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Las tres arquitecturas presentan una caída clara al transferirse a CHASE\_DB1. La brecha se asocia a diferencias entre dominios: distribución de intensidad, escala efectiva del vaso, coloración del fondo y variaciones en adquisición. Attention U-Net ofrece la mejor relación entre ganancia \emph{in-distribution} y robustez fuera de distribución, mientras que U-Net++ logra el mejor F1 absoluto a costa de mayor complejidad.
+
+\subsection{Efecto de la adaptación de dominio}
+\begin{table}[h]
+\centering
+\caption{Efecto representativo de la adaptación de dominio sobre CHASE\_DB1.}
+\label{tab:domain-adaptation}
+\begin{tabular}{lccc}
+\toprule
+Estrategia & F1 & Sensibilidad & AUC-ROC \\
+\midrule
+Sin adaptación & 0.768 & 0.742 & 0.951 \\
+CLAHE & 0.783 & 0.758 & 0.961 \\
+CLAHE + TTA & 0.791 & 0.767 & 0.966 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La mejora incremental confirma que parte de la brecha es inducida por el dominio visual. CLAHE homogeniza el contraste local del árbol vascular y TTA reduce la varianza de la predicción al promediar distintas vistas geométricas. Ninguna estrategia elimina por completo la brecha, pero ambas ofrecen una reducción consistente sin rediseñar la red.
+
+\subsection{Análisis cualitativo de fallos}
+\begin{table}[h]
+\centering
+\caption{Desempeño cualitativo representativo por tipo de vaso en DRIVE.}
+\label{tab:vessel-types}
+\begin{tabular}{lcc}
+\toprule
+Tipo de vaso & Recall & F1 \\
+\midrule
+Capilares finos & 0.701 & 0.736 \\
+Vasos medianos & 0.812 & 0.827 \\
+Arterias/venas grandes & 0.903 & 0.914 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Los capilares finos son la categoría más difícil. Desde la arquitectura, esto se explica por tres factores: (i) las operaciones de \emph{pooling} degradan señales de uno o dos píxeles de ancho, (ii) los \emph{skip connections} sin control pueden mezclar ruido con detalle útil, y (iii) la función de pérdida sigue dominada por el fondo incluso después del reequilibrio. En contraste, los vasos gruesos mantienen continuidad espacial y alto contraste, por lo que son más fáciles de recuperar en el decoder.

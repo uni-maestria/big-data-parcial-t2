@@ -1,0 +1,14 @@
+\section{Motivación e introducción}
+La segmentación automática de vasos retinianos es una tarea central en sistemas de apoyo al diagnóstico de retinopatía diabética, hipertensión y otras patologías microvasculares. Desde el punto de vista clínico, una máscara vascular precisa permite cuantificar tortuosidad, calibre y densidad de vasos; desde el punto de vista computacional, el problema es desafiante por el fuerte desbalance entre fondo y vasos, la variación de iluminación entre adquisiciones y la presencia de estructuras extremadamente finas.
+
+El objetivo de este trabajo es construir un sistema reproducible, completamente implementado en PyTorch y alineado con los entregables del examen parcial. En particular, el repositorio desarrolla una U-Net desde cero, incorpora variantes con compuertas de atención y \emph{nested skip connections}, compara decisiones de entrenamiento mediante ablación, evalúa la generalización entre datasets y analiza tipos de fallo desde una perspectiva arquitectónica.
+
+Los entregables cubiertos por esta plantilla son los siguientes:
+\begin{itemize}
+    \item Implementación personalizada de U-Net y variantes sin depender de bibliotecas de segmentación.
+    \item Estudio de ablación sobre decisiones arquitectónicas y de pérdida.
+    \item Evaluación en DRIVE con sensibilidad, especificidad, F1 y AUC-ROC.
+    \item Experimento DRIVE $\rightarrow$ CHASE\_DB1 para cuantificar la brecha de generalización.
+    \item Análisis cualitativo de fallos por tipo de vaso.
+    \item Evidencia de una estrategia de adaptación de dominio basada en preprocesamiento y TTA.
+\end{itemize}
