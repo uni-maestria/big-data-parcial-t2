@@ -205,18 +205,20 @@ def domain_shift_experiment(
     device: torch.device,
     threshold: float = 0.5,
     use_tta: bool = True,
+    source_name: str = "fuente",
+    target_name: str = "objetivo",
 ) -> Dict[str, Dict]:
     """
-    Evalúa el modelo en fuente (DRIVE) y objetivo (CHASE_DB1).
+    Evalúa el modelo en dominio fuente y dominio objetivo.
     Calcula y reporta la brecha de rendimiento.
 
     Returns:
         dict con métricas de 'source', 'target' y 'gap'.
     """
-    print("Evaluando en dominio fuente (DRIVE)...")
+    print(f"Evaluando en dominio fuente ({source_name})...")
     source_metrics = evaluate_loader(model, source_loader, device, threshold, use_tta)
 
-    print("Evaluando en dominio objetivo (CHASE_DB1)...")
+    print(f"Evaluando en dominio objetivo ({target_name})...")
     target_metrics = evaluate_loader(model, target_loader, device, threshold, use_tta)
 
     gap = {}
@@ -230,9 +232,9 @@ def domain_shift_experiment(
     }
 
     print("\n" + "="*60)
-    print("EXPERIMENTO DE DOMAIN SHIFT (DRIVE → CHASE_DB1)")
+    print(f"EXPERIMENTO DE DOMAIN SHIFT ({source_name} → {target_name})")
     print("="*60)
-    header = f"{'Métrica':>15} | {'DRIVE':>8} | {'CHASE_DB1':>9} | {'Brecha':>7}"
+    header = f"{'Métrica':>15} | {source_name:>8} | {target_name:>9} | {'Brecha':>7}"
     print(header)
     print("-" * 50)
     for key in ["f1", "sensitivity", "specificity", "auc_roc"]:

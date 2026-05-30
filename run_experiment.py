@@ -1,6 +1,6 @@
 """
 run_experiment.py — Script principal que ejecuta todos los entregables del examen.
-Uso: python run_experiment.py --drive_root data/DRIVE --chase_root data/CHASE_DB1
+Uso: python run_experiment.py --drive_root data/DRIVE
 """
 
 import argparse
@@ -11,14 +11,13 @@ import torch
 
 from config import Config
 from model import build_model
-from dataset import load_drive, load_chase_db1, load_stare
+from dataset import load_drive
 from train import train
-from evaluate import evaluate_loader, domain_shift_experiment, find_optimal_threshold
-from ablation import run_ablation, domain_adaptation_experiment
+from evaluate import evaluate_loader, find_optimal_threshold
+from ablation import run_ablation
 from visualize import (
     plot_segmentation_results,
     plot_vessel_type_analysis,
-    plot_domain_shift_comparison,
     plot_roc_curve,
     compute_vessel_type_metrics,
 )
@@ -32,8 +31,6 @@ def main(args):
 
     cfg = Config(
         drive_root=args.drive_root,
-        chase_root=args.chase_root,
-        stare_root=args.stare_root,
         arch="att_unet",
         loss="combined",
         base_filters=64,
@@ -72,23 +69,6 @@ def main(args):
         json.dump(drive_metrics, f, indent=2)
 
     # ──────────────────────────────────────────────────────────────────────────
-    # ENTREGABLE 4: Experimento de domain shift (DRIVE → CHASE_DB1)
-    # ──────────────────────────────────────────────────────────────────────────
-    print("\n[ENTREGABLE 4] Experimento de domain shift...")
-    chase_loader = load_chase_db1(args.chase_root, use_clahe=True,
-                                   output_size=512, batch_size=1)
-    shift_results = domain_shift_experiment(model, drive_test, chase_loader, device,
-                                             use_tta=True)
-
-    plot_domain_shift_comparison(
-        shift_results["source"], shift_results["target"],
-        save_path=str(results_dir / "domain_shift.png"),
-    )
-    with open(results_dir / "domain_shift.json", "w") as f:
-        json.dump({k: {kk: float(vv) for kk, vv in v.items() if isinstance(vv, float)}
-                   for k, v in shift_results.items()}, f, indent=2)
-
-    # ──────────────────────────────────────────────────────────────────────────
     # ENTREGABLE 5: Análisis cualitativo de fallos por tipo de vaso
     # ──────────────────────────────────────────────────────────────────────────
     print("\n[ENTREGABLE 5] Análisis de fallos por tipo de vaso...")
@@ -113,24 +93,12 @@ def main(args):
             print(f"  {vtype:>12} | {np.mean(f1s):>10.4f} | {np.std(f1s):>8.4f}")
 
     # ──────────────────────────────────────────────────────────────────────────
-    # ENTREGABLE 6: Estrategia de adaptación de dominio
-    # ──────────────────────────────────────────────────────────────────────────
-    print("\n[ENTREGABLE 6] Comparación de estrategias de adaptación...")
-    adapt_results = domain_adaptation_experiment(
-        model, args.drive_root, args.chase_root, device, img_size=512,
-    )
-    with open(results_dir / "adaptation_results.json", "w") as f:
-        json.dump({k: {kk: float(vv) for kk, vv in v.items() if isinstance(vv, float)}
-                   for k, v in adapt_results.items()}, f, indent=2)
-
-    # ──────────────────────────────────────────────────────────────────────────
     # ENTREGABLE 2: Estudio de ablación (versión rápida)
     # ──────────────────────────────────────────────────────────────────────────
     if args.run_ablation:
         print("\n[ENTREGABLE 2] Estudio de ablación...")
         ablation_df = run_ablation(
             drive_root=args.drive_root,
-            chase_root=args.chase_root,
             experiments=["loss_function", "architecture"],
             epochs=min(args.epochs, 30),
             save_dir=str(results_dir / "ablation"),
@@ -145,8 +113,6 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Examen Parcial — Segmentación de vasos retinianos")
     parser.add_argument("--drive_root",   type=str, required=True,  help="Ruta a DRIVE/")
-    parser.add_argument("--chase_root",   type=str, required=True,  help="Ruta a CHASE_DB1/")
-    parser.add_argument("--stare_root",   type=str, default="",     help="Ruta a STARE/ (opcional)")
     parser.add_argument("--epochs",       type=int, default=100)
     parser.add_argument("--results_dir",  type=str, default="results")
     parser.add_argument("--run_ablation", action="store_true",

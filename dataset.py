@@ -1,6 +1,6 @@
 """
-dataset.py — DataLoaders para DRIVE, STARE y CHASE_DB1.
-Soporta aumentación de datos, CLAHE y normalización por dataset.
+dataset.py — DataLoader para DRIVE (Digital Retinal Images for Vessel Extraction).
+Soporta aumentación de datos, CLAHE y normalización.
 """
 
 import os
@@ -259,67 +259,6 @@ def load_drive(
     return DataLoader(ds, batch_size=batch_size, shuffle=(split == "train"),
                       num_workers=num_workers, pin_memory=True, drop_last=(split == "train"))
 
-
-def load_stare(
-    root: str,
-    augment: bool = False,
-    use_clahe: bool = True,
-    output_size: int = 512,
-    batch_size: int = 4,
-    num_workers: int = 4,
-    annotator: int = 1,  # 1 o 2 (dos anotadores expertos)
-) -> DataLoader:
-    """
-    Carga STARE (20 imágenes .ppm con anotaciones de 2 expertos).
-
-    Estructura esperada:
-        root/
-          images/ *.ppm
-          labels-ah/ *.ppm   (anotador 1)
-          labels-vk/ *.ppm   (anotador 2)
-    """
-    root   = Path(root)
-    images = sorted((root / "images").glob("*.ppm"))
-    label_dir = "labels-ah" if annotator == 1 else "labels-vk"
-    masks  = sorted((root / label_dir).glob("*.ppm"))
-
-    aug = JointAugment(output_size=output_size) if augment else None
-    ds  = RetinalDataset(images, masks, augment=aug, use_clahe=use_clahe,
-                          output_size=output_size)
-    return DataLoader(ds, batch_size=batch_size, shuffle=False,
-                      num_workers=num_workers, pin_memory=True)
-
-
-def load_chase_db1(
-    root: str,
-    augment: bool = False,
-    use_clahe: bool = True,
-    output_size: int = 512,
-    batch_size: int = 4,
-    num_workers: int = 4,
-) -> DataLoader:
-    """
-    Carga CHASE_DB1 (28 imágenes .jpg con anotaciones _1stHO.png).
-
-    Estructura esperada:
-        root/
-          Image_*.jpg
-          Image_*_1stHO.png
-    """
-    root   = Path(root)
-    images = sorted(root.glob("Image_*.jpg"))
-    masks  = sorted(root.glob("Image_*_1stHO.png"))
-
-    aug = JointAugment(output_size=output_size) if augment else None
-    ds  = RetinalDataset(images, masks, augment=aug, use_clahe=use_clahe,
-                          output_size=output_size)
-    return DataLoader(ds, batch_size=batch_size, shuffle=False,
-                      num_workers=num_workers, pin_memory=True)
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Utilidades
-# ──────────────────────────────────────────────────────────────────────────────
 
 def compute_class_weights(loader: DataLoader) -> torch.Tensor:
     """

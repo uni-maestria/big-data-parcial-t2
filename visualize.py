@@ -225,8 +225,10 @@ def plot_vessel_type_analysis(
 def plot_domain_shift_comparison(
     source_metrics: Dict, target_metrics: Dict,
     save_path: Optional[str] = None,
+    source_label: str = "Fuente",
+    target_label: str = "Objetivo",
 ):
-    """Gráfica de barras comparando métricas DRIVE vs CHASE_DB1."""
+    """Gráfica de barras comparando métricas entre dos dominios."""
     keys   = ["f1", "sensitivity", "specificity", "auc_roc"]
     labels = ["F1", "Sensibilidad", "Especificidad", "AUC-ROC"]
     src_v  = [source_metrics[k] for k in keys]
@@ -235,8 +237,8 @@ def plot_domain_shift_comparison(
     x    = np.arange(len(keys))
     w    = 0.35
     fig, ax = plt.subplots(figsize=(9, 5))
-    b1 = ax.bar(x - w/2, src_v, w, label="DRIVE (fuente)", color="#2563eb", alpha=0.85)
-    b2 = ax.bar(x + w/2, tgt_v, w, label="CHASE_DB1 (objetivo)", color="#dc2626", alpha=0.85)
+    b1 = ax.bar(x - w/2, src_v, w, label=source_label, color="#2563eb", alpha=0.85)
+    b2 = ax.bar(x + w/2, tgt_v, w, label=target_label, color="#dc2626", alpha=0.85)
 
     ax.set_ylim(0.7, 1.0)
     ax.set_xticks(x)
