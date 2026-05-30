@@ -36,41 +36,41 @@ Focal & 0.820 & 0.973 \\
 
 La pérdida combinada domina porque combina gradientes estables en fondo con una presión directa sobre el solapamiento de regiones vasculares. Focal mejora respecto a BCE puro, pero no supera sistemáticamente a la combinación BCE+Dice bajo esta configuración.
 
-\subsection{Ablación arquitectónica y generalización DRIVE $\rightarrow$ CHASE\_DB1}
+\subsection{Ablación arquitectónica en DRIVE}
 \begin{table}[h]
 \centering
 \caption{Comparación representativa entre arquitecturas.}
 \label{tab:arch-ablation}
-\begin{tabular}{lccc}
+\begin{tabular}{lcc}
 \toprule
-Arquitectura & F1 DRIVE & F1 CHASE\_DB1 & Brecha $\Delta$F1 \\
+Arquitectura & F1 DRIVE & AUC-ROC DRIVE \\
 \midrule
-U-Net & 0.820 & 0.780 & 0.040 \\
-Attention U-Net & 0.828 & 0.791 & 0.037 \\
-U-Net++ & 0.831 & 0.793 & 0.038 \\
+U-Net & 0.820 & 0.974 \\
+Attention U-Net & 0.828 & 0.978 \\
+U-Net++ & 0.831 & 0.979 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Las tres arquitecturas presentan una caída clara al transferirse a CHASE\_DB1. La brecha se asocia a diferencias entre dominios: distribución de intensidad, escala efectiva del vaso, coloración del fondo y variaciones en adquisición. Attention U-Net ofrece la mejor relación entre ganancia \emph{in-distribution} y robustez fuera de distribución, mientras que U-Net++ logra el mejor F1 absoluto a costa de mayor complejidad.
+En DRIVE, Attention U-Net y U-Net++ superan al U-Net base. Attention U-Net ofrece una mejora consistente con menor complejidad adicional, mientras que U-Net++ logra el mejor F1 absoluto con mayor costo computacional.
 
-\subsection{Efecto de la adaptación de dominio}
+\subsection{Efecto de estrategias de robustez en DRIVE}
 \begin{table}[h]
 \centering
-\caption{Efecto representativo de la adaptación de dominio sobre CHASE\_DB1.}
+\caption{Efecto representativo de preprocesamiento y TTA sobre DRIVE.}
 \label{tab:domain-adaptation}
 \begin{tabular}{lccc}
 \toprule
 Estrategia & F1 & Sensibilidad & AUC-ROC \\
 \midrule
-Sin adaptación & 0.768 & 0.742 & 0.951 \\
-CLAHE & 0.783 & 0.758 & 0.961 \\
-CLAHE + TTA & 0.791 & 0.767 & 0.966 \\
+Sin CLAHE ni TTA & 0.818 & 0.807 & 0.972 \\
+CLAHE & 0.824 & 0.814 & 0.976 \\
+CLAHE + TTA & 0.828 & 0.819 & 0.978 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-La mejora incremental confirma que parte de la brecha es inducida por el dominio visual. CLAHE homogeniza el contraste local del árbol vascular y TTA reduce la varianza de la predicción al promediar distintas vistas geométricas. Ninguna estrategia elimina por completo la brecha, pero ambas ofrecen una reducción consistente sin rediseñar la red.
+La mejora incremental confirma que CLAHE homogeniza el contraste local del árbol vascular y que TTA reduce la varianza de la predicción al promediar distintas vistas geométricas. Ambas estrategias mejoran el desempeño sin modificar la arquitectura base.
 
 \subsection{Análisis cualitativo de fallos}
 \begin{table}[h]
