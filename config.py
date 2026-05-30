@@ -10,8 +10,6 @@ from typing import Optional
 class Config:
     # ── Datos ──────────────────────────────────────────────────────────────────
     drive_root:  str = "data/DRIVE"
-    stare_root:  str = "data/STARE"
-    chase_root:  str = "data/CHASE_DB1"
 
     # ── Modelo ─────────────────────────────────────────────────────────────────
     arch:         str   = "unet"         # unet | att_unet | unetpp
