@@ -1,0 +1,17 @@
+\section{Experimentos}
+\subsection{Datasets y protocolo}
+Se usó DRIVE como dominio fuente para entrenamiento y evaluación in-distribution, y CHASE\_DB1 como dominio objetivo para evaluar generalización cruzada. El protocolo principal es \textit{train on DRIVE, test on CHASE\_DB1}, manteniendo arquitectura y pesos del modelo entrenado en DRIVE.
+
+\subsection{Configuración experimental}
+Los experimentos se ejecutan con una configuración reproducible de hiperparámetros (semilla fija, optimizador Adam, early stopping, resolución homogénea y umbral de segmentación común). Se emplea además máscara de FOV cuando está disponible para evitar sesgo por píxeles fuera del campo retiniano.
+
+\subsection{Estudio de ablación}
+Se ejecutaron ablaciones sistemáticas en al menos dos ejes:
+\begin{enumerate}
+    \item \textbf{Pérdida}: BCE vs Dice vs combinada.
+    \item \textbf{Arquitectura/capacidad}: U-Net vs Attention U-Net vs U-Net++ y variación de filtros base.
+\end{enumerate}
+Como extensión, se evaluó el impacto de preprocesamiento (con/sin CLAHE) y TTA para caracterizar su contribución a la robustez inter-dominio.
+
+\subsection{Comparabilidad}
+Para asegurar comparabilidad entre corridas, se controlaron datos, número de épocas, política de selección de checkpoint y conjunto de métricas reportadas. Todas las variantes se evaluaron bajo el mismo pipeline de inferencia y postproceso.

@@ -1,0 +1,17 @@
+\section{Metodología}
+\subsection{Implementación personalizada de U-Net}
+Se implementó desde cero una familia de modelos de segmentación en PyTorch, incluyendo bloques convolucionales dobles, etapas de downsampling/upsampling, concatenación de skip connections y cabeza de salida binaria. La arquitectura base corresponde a U-Net, y se añadieron variantes con puertas de atención (Attention U-Net) y conexiones anidadas (U-Net++), todas definidas manualmente en el código del proyecto.
+
+\subsection{Decisiones arquitectónicas y de entrenamiento}
+El estudio compara explícitamente:
+\begin{itemize}
+    \item Función de pérdida: BCE, Dice y combinación BCE+Dice.
+    \item Capacidad/arquitectura: variaciones en \texttt{base\_filters} y comparación entre U-Net, Attention U-Net y U-Net++.
+    \item Esquema de inferencia: inferencia directa vs. Test-Time Augmentation (TTA).
+\end{itemize}
+
+\subsection{Preprocesamiento y adaptación de dominio}
+Se aplicó una estrategia de adaptación ligera mediante preprocesamiento: CLAHE sobre canal verde y normalización por canal. Esta elección busca mitigar diferencias de contraste e iluminación entre DRIVE y CHASE\_DB1 sin modificar etiquetas ni requerir reentrenamiento completo en el dominio objetivo.
+
+\subsection{Métricas de evaluación}
+La evaluación se realizó con métricas píxel a píxel: sensibilidad, especificidad, F1 y AUC-ROC. Para consistencia con el escenario clínico, se reportan resultados agregados por dataset y también brechas explícitas entre dominio fuente (DRIVE) y objetivo (CHASE\_DB1).

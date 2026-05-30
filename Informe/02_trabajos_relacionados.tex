@@ -1,0 +1,6 @@
+\section{Trabajos relacionados}
+La arquitectura U-Net \cite{ronneberger2015unet} es el punto de partida dominante en segmentación biomédica por su combinación de encoder-decoder y conexiones de salto que preservan detalle espacial. Variantes posteriores como Attention U-Net \cite{oktay2018attention} y U-Net++ \cite{zhou2019unetpp} mejoran la fusión multiescala y el filtrado de información irrelevante en las skip connections.
+
+En tareas de segmentación vascular, la literatura reporta que la elección de la función de pérdida es determinante debido al fuerte desbalance fondo/vaso. Dice loss \cite{milletari2016vnet} optimiza directamente superposición, BCE estabiliza el entrenamiento y Focal loss \cite{lin2017focal} enfatiza ejemplos difíciles, particularmente vasos finos de bajo contraste.
+
+Sobre los datasets, DRIVE \cite{staal2004drive} y CHASE\_DB1 son referentes para evaluar tanto rendimiento in-distribution como capacidad de generalización. Revisiones amplias del campo \cite{fraz2012retinal} muestran que las caídas entre datasets siguen siendo una limitación abierta, motivando técnicas de adaptación y preprocesamiento. En esa línea, métodos de realce local como CLAHE suelen emplearse para homogenizar contraste y mejorar la detectabilidad de capilares.

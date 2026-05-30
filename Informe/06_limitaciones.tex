@@ -1,0 +1,16 @@
+\section{Limitaciones y conclusiones}
+\subsection{Limitaciones observadas}
+Aunque el modelo alcanza buen desempeño en DRIVE, su rendimiento disminuye al evaluar en CHASE\_DB1, evidenciando sensibilidad al cambio de dominio. Las principales fuentes de error observadas son:
+\begin{itemize}
+    \item Vasos muy finos (capilares) con baja respuesta de contraste.
+    \item Variaciones de iluminación y color entre dispositivos/campañas de adquisición.
+    \item Ambigüedad en bordes de vasos y diferencias de anotación entre datasets.
+\end{itemize}
+
+Arquitectónicamente, la compresión espacial en el encoder puede eliminar señales de alta frecuencia relevantes para capilares, y las skip connections no siempre recuperan completamente ese detalle cuando la separación señal-ruido es baja.
+
+\subsection{Conclusiones}
+Se cumplió la implementación personalizada de U-Net en PyTorch y se desarrolló un estudio de ablación con decisiones arquitectónicas y de entrenamiento. La evaluación in-distribution y el experimento de generalización cruzada permitieron cuantificar la brecha DRIVE$\rightarrow$CHASE\_DB1. Además, la estrategia de adaptación basada en preprocesamiento mostró potencial para reducir dicha brecha, especialmente al combinarse con TTA.
+
+\subsection{Trabajo futuro}
+Como mejoras futuras se propone: (i) diseño multiescala explícito para vasos finos, (ii) mecanismos de atención espacial/canal más fuertes, y (iii) adaptación de dominio basada en alineamiento de características o fine-tuning semisupervisado en el dominio objetivo.

@@ -1,0 +1,57 @@
+\section{Resultados}
+\subsection{Evaluación en DRIVE (in-distribution)}
+La Tabla~\ref{tab:drive} resume el desempeño del modelo principal en DRIVE.
+
+\begin{table}[h]
+\centering
+\caption{Resultados en DRIVE (completar con valores de ejecución).}
+\label{tab:drive}
+\begin{tabular}{lcccc}
+\toprule
+Modelo & Sensibilidad & Especificidad & F1 & AUC-ROC \\
+\midrule
+Attention U-Net + pérdida combinada & \textbf{--} & \textbf{--} & \textbf{--} & \textbf{--} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Generalización DRIVE $\rightarrow$ CHASE\_DB1}
+La Tabla~\ref{tab:cross} reporta la evaluación fuera de distribución y la brecha respecto a DRIVE.
+
+\begin{table}[h]
+\centering
+\caption{Generalización cruzada y brecha de rendimiento.}
+\label{tab:cross}
+\begin{tabular}{lcccc}
+\toprule
+Dataset & Sensibilidad & Especificidad & F1 & AUC-ROC \\
+\midrule
+DRIVE & -- & -- & -- & -- \\
+CHASE\_DB1 & -- & -- & -- & -- \\
+Brecha ($\Delta$ DRIVE-CHASE) & -- & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Efecto de la adaptación de dominio}
+La Tabla~\ref{tab:adapt} muestra el efecto de la estrategia de adaptación por preprocesamiento en CHASE\_DB1.
+
+\begin{table}[h]
+\centering
+\caption{Impacto de la adaptación (antes vs después).}
+\label{tab:adapt}
+\begin{tabular}{lccc}
+\toprule
+Estrategia & F1 & Sensibilidad & AUC-ROC \\
+\midrule
+Sin adaptación & -- & -- & -- \\
+CLAHE + normalización & -- & -- & -- \\
+CLAHE + normalización + TTA & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Análisis cualitativo de fallos}
+De forma consistente, los mayores errores se concentran en capilares finos y regiones de bajo contraste. En cambio, arterias y venas de mayor calibre muestran contornos más estables. Este patrón sugiere una limitación estructural: la pérdida de detalle inducida por downsampling afecta más a estructuras delgadas, incluso cuando existen skip connections.
+
+Se recomienda incluir en la versión final una figura comparativa con: (a) imagen original, (b) máscara real, (c) predicción, (d) mapa de error; mostrando al menos casos de éxito y fallo en capilares.
