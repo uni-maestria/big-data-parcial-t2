@@ -1,0 +1,14 @@
+\section{Metodología}
+\subsection{Implementación personalizada de U-Net}
+La implementación principal reside en \texttt{/tmp/workspace/uni-maestria/big-data-parcial-t2/model.py}. El encoder y decoder se construyen a partir de bloques \texttt{DoubleConv}, \texttt{DownBlock} y \texttt{UpBlock}, sin reutilizar bibliotecas externas de segmentación. La U-Net base usa convoluciones $3\times3$, \emph{batch normalization}, activación ReLU y profundidad configurable. El decoder emplea \emph{upsampling} bilineal seguido de concatenación con la característica correspondiente del encoder.
+
+Sobre esta base se implementan dos variantes. La primera es \textbf{Attention U-Net}, que inserta compuertas de atención antes de cada \emph{skip connection} para filtrar activaciones irrelevantes. La segunda es \textbf{U-Net++}, que incorpora conexiones densas anidadas y una salida con \emph{deep supervision}. Estas variantes permiten comparar si la mejora proviene del filtrado espacial de características o de una fusión multiescala más rica.
+
+\subsection{Pérdidas y configuración de entrenamiento}
+El archivo \texttt{losses.py} implementa BCE con logits, Dice Loss, pérdida combinada BCE+Dice, Focal Loss y Tversky. La configuración recomendada del proyecto usa la pérdida combinada con $\alpha=0.5$, ya que BCE estabiliza el entrenamiento mientras que Dice aproxima directamente la optimización del F1. El entrenamiento se realiza con AdamW, \emph{cosine annealing}, \emph{gradient clipping}, \emph{mixed precision} y \emph{early stopping} según \texttt{train.py}.
+
+\subsection{Preprocesamiento y adaptación de dominio}
+El archivo \texttt{preprocessing.py} define la estrategia de preprocesamiento. La decisión central es aplicar CLAHE sobre el canal verde, que suele ofrecer mayor contraste vascular que los canales rojo y azul. Posteriormente se normaliza la imagen con estadísticos fijos y se conserva la máscara de FOV cuando el dataset la provee. Como mecanismo adicional de adaptación se usa \emph{test-time augmentation} con ocho transformaciones geométricas, promediando las predicciones en inferencia.
+
+\subsection{Evaluación y análisis cualitativo}
+La evaluación cuantitativa se implementa en \texttt{evaluate.py} y calcula sensibilidad, especificidad, precisión, F1, exactitud y AUC-ROC a nivel de píxel. Para el análisis cualitativo, \texttt{visualize.py} clasifica los vasos por diámetro estimado en tres grupos: finos, medios y gruesos. Esta descomposición permite relacionar los errores del modelo con propiedades estructurales de la arquitectura, especialmente la pérdida de resolución en capilares finos.

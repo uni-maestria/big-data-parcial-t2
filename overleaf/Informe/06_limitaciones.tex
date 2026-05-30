@@ -1,0 +1,9 @@
+\section{Limitaciones, análisis cualitativo de fallos y conclusiones}
+\subsection{Limitaciones principales}
+Aunque el repositorio cubre todos los entregables funcionales, existen limitaciones que deben dejarse explícitas en la entrega final. Primero, el entrenamiento depende de datasets externos no versionados dentro del repositorio, por lo que la reproducibilidad completa exige documentar rutas, semillas y versiones de librerías. Segundo, la generalización entre datasets sigue siendo parcial: incluso con CLAHE y TTA, el cambio de dominio no desaparece. Tercero, la evaluación es binaria y no distingue arterias de venas ni incorpora incertidumbre clínica.
+
+\subsection{Interpretación de fallos}
+Los errores más frecuentes son falsos negativos en bifurcaciones finas, segmentos periféricos de bajo contraste y regiones próximas al borde del FOV. Arquitectónicamente, estos errores sugieren que una mayor resolución efectiva o mecanismos explícitos de atención multiescala podrían mejorar la recuperación de detalle. También aparecen falsos positivos aislados sobre reflejos o texturas del fondo, lo que indica que la red todavía confunde patrones lineales no vasculares cuando la evidencia contextual es débil.
+
+\subsection{Conclusiones}
+La implementación personalizada de U-Net en PyTorch permite satisfacer el requerimiento principal del trabajo con una solución clara y extensible. El estudio de ablación muestra que la pérdida combinada y las compuertas de atención ofrecen la mejor relación entre precisión y robustez. El experimento DRIVE $\rightarrow$ CHASE\_DB1 confirma una brecha de generalización real, y la estrategia de adaptación basada en CLAHE + TTA demuestra que el preprocesamiento sigue siendo una herramienta efectiva cuando se trabaja con pocos datos y sin reentrenamiento profundo. Como trabajo futuro, sería natural explorar \emph{fine-tuning} con pocas imágenes objetivo, pérdidas topológicas y supervisión explícita de vasos finos.

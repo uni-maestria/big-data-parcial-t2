@@ -1,0 +1,24 @@
+\section{Experimentos}
+\subsection{Datasets y protocolo}
+Se emplean dos datasets principales:
+\begin{itemize}
+    \item \textbf{DRIVE}: dominio fuente y benchmark principal. Se entrena con el conjunto oficial de entrenamiento y se evalúa sobre el conjunto de prueba.
+    \item \textbf{CHASE\_DB1}: dominio objetivo para medir generalización cruzada sin reentrenamiento completo.
+\end{itemize}
+En ambos casos se trabaja con segmentación binaria píxel a píxel de vasos. Cuando DRIVE no contiene máscaras del conjunto de prueba, el cargador del repositorio contempla un respaldo 80/20 sobre el conjunto de entrenamiento para validación interna.
+
+\subsection{Configuración base}
+La configuración base del experimento completo sigue la definida en \texttt{run\_experiment.py}: arquitectura \texttt{att\_unet}, pérdida combinada, \texttt{base\_filters=64}, tamaño de imagen de 512, \emph{batch size} de 4, 100 épocas, CLAHE activado y TTA en evaluación. Esta combinación representa el punto de partida porque balancea costo computacional y recuperación de detalle fino.
+
+\subsection{Estudio de ablación}
+Se construyen dos comparaciones mínimas obligatorias y dos complementarias:
+\begin{enumerate}
+    \item \textbf{Función de pérdida}: BCE vs Dice vs Combinada vs Focal.
+    \item \textbf{Arquitectura}: U-Net vs Attention U-Net vs U-Net++.
+    \item \textbf{Capacidad del modelo}: 32, 64 y 128 filtros base.
+    \item \textbf{Preprocesamiento}: con y sin CLAHE.
+\end{enumerate}
+Cada variante se entrena sobre DRIVE y se evalúa tanto en DRIVE como en CHASE\_DB1 para medir rendimiento absoluto y brecha de transferencia.
+
+\subsection{Hipótesis experimentales}
+Las hipótesis del estudio son: (i) la pérdida combinada debe superar a BCE o Dice por separado debido al desbalance de clases; (ii) Attention U-Net debe mejorar la recuperación de capilares al suprimir ruido en las \emph{skip connections}; (iii) el rendimiento cruzado caerá en CHASE\_DB1 por diferencias de iluminación, contraste y grosor aparente de vasos; y (iv) CLAHE+TTA reducirá parcialmente esa brecha al normalizar el dominio visual de entrada.

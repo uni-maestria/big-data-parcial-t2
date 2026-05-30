@@ -1,0 +1,118 @@
+\documentclass{article}
+
+\IfFileExists{neurips_2026.sty}{%
+  \usepackage[preprint]{neurips_2026}
+}{%
+  \usepackage[a4paper,margin=1in]{geometry}
+}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{natbib}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=magenta,
+  urlcolor=cyan,
+  pdftitle={Segmentación de Vasos Retinianos con U-Net en PyTorch},
+  pdfpagemode=FullScreen,
+}
+
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  stringstyle=\color{red},
+  commentstyle=\color{green!50!black},
+  breaklines=true,
+  frame=single,
+  captionpos=b
+}
+
+\title{Segmentación de Vasos Retinianos con U-Net en PyTorch: Estudio de Ablación, Generalización y Adaptación de Dominio}
+
+\author{%
+\textbf{[Nombre del estudiante]} \\
+Unidad de Posgrado - FIIS \\
+Universidad Nacional de Ingeniería \\
+\texttt{[correo@uni.pe]}
+}
+
+\begin{document}
+
+\maketitle
+
+\input{Informe/00_resumen}
+\input{Informe/01_motivacion}
+\input{Informe/02_trabajos_relacionados}
+\input{Informe/03_metodologia}
+\input{Informe/04_experimentos}
+\input{Informe/05_resultados}
+\input{Informe/06_limitaciones}
+
+\bibliographystyle{plainnat}
+\begin{thebibliography}{9}
+
+\bibitem[Ronneberger et~al.(2015)Ronneberger, Fischer y Brox]{ronneberger2015unet}
+Olaf Ronneberger, Philipp Fischer y Thomas Brox.
+\newblock U-Net: Convolutional networks for biomedical image segmentation.
+\newblock En \emph{MICCAI}, páginas 234--241, 2015.
+
+\bibitem[Oktay et~al.(2018)Oktay et~al.]{oktay2018attention}
+Ozan Oktay et~al.
+\newblock Attention U-Net: Learning where to look for the pancreas.
+\newblock \emph{arXiv preprint arXiv:1804.03999}, 2018.
+
+\bibitem[Zhou et~al.(2019)Zhou et~al.]{zhou2019unetpp}
+Zongwei Zhou et~al.
+\newblock UNet++: A nested U-Net architecture for medical image segmentation.
+\newblock \emph{IEEE Transactions on Medical Imaging}, 39(6):1856--1867, 2019.
+
+\bibitem[Lin et~al.(2017)Lin et~al.]{lin2017focal}
+Tsung-Yi Lin et~al.
+\newblock Focal loss for dense object detection.
+\newblock En \emph{ICCV}, páginas 2980--2988, 2017.
+
+\bibitem[Pizer et~al.(1987)Pizer et~al.]{pizer1987clahe}
+Stephen~M. Pizer et~al.
+\newblock Adaptive histogram equalization and its variations.
+\newblock \emph{Computer Vision, Graphics, and Image Processing}, 39(3):355--368, 1987.
+
+\bibitem[Staal et~al.(2004)Staal et~al.]{staal2004drive}
+J.~Staal et~al.
+\newblock Ridge-based vessel segmentation in color images of the retina.
+\newblock \emph{IEEE Transactions on Medical Imaging}, 23(4):501--509, 2004.
+
+\bibitem[Fraz et~al.(2012)Fraz et~al.]{fraz2012review}
+M.~M. Fraz et~al.
+\newblock Blood vessel segmentation methodologies in retinal images -- a survey.
+\newblock \emph{Computer Methods and Programs in Biomedicine}, 108(1):407--433, 2012.
+
+\bibitem[Hoover et~al.(2000)Hoover et~al.]{hoover2000stare}
+Adam Hoover et~al.
+\newblock Locating blood vessels in retinal images by piece-wise threshold probing of a matched filter response.
+\newblock \emph{IEEE Transactions on Medical Imaging}, 19(3):203--210, 2000.
+
+\bibitem[Owen et~al.(2009)Owen et~al.]{owen2009chase}
+Christopher~G. Owen et~al.
+\newblock Measuring retinal vessel tortuosity in 10-year-old children: validation of the Computer-Assisted Image Analysis of the Retina (CAIAR) program.
+\newblock \emph{Investigative Ophthalmology \& Visual Science}, 50(5):2004--2010, 2009.
+
+\end{thebibliography}
+
+\end{document}
