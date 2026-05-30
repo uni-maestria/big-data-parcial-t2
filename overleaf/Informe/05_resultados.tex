@@ -6,10 +6,14 @@ Esta sección registra únicamente los resultados compartidos por el usuario med
 \subsubsection{Curva ROC en DRIVE}
 \begin{figure}[h]
 \centering
-\fbox{\parbox{0.95\linewidth}{
-\textbf{Imagen fuente:} \url{https://github.com/user-attachments/assets/770d79f2-b73b-4a0d-9a78-e795b4baaeb1}\\
-\textbf{Nota:} En este entorno no fue posible descargar el archivo de imagen automáticamente, por lo que se referencia la fuente original.
-}}
+\IfFileExists{figuras/resultado_1.png}{
+    \includegraphics[width=0.9\linewidth]{figuras/resultado_1.png}
+}{
+    \fbox{\parbox{0.95\linewidth}{
+    \textbf{Imagen fuente:} \url{https://github.com/user-attachments/assets/770d79f2-b73b-4a0d-9a78-e795b4baaeb1}\\
+    \textbf{Nota:} Copiar la imagen en \texttt{overleaf/figuras/resultado_1.png} para mostrarla directamente en el PDF.
+    }}
+}
 \caption{Curva ROC en DRIVE compartida por el usuario (AUC = 0.8482).}
 \label{fig:roc-drive-user}
 \end{figure}
@@ -23,4 +27,4 @@ Se recibieron además las siguientes fuentes:
     \item \url{https://github.com/user-attachments/assets/d135cf84-55ea-4551-846c-2c80b899da03}
 \end{itemize}
 
-Estas fuentes corresponden a evidencias adicionales de resultados experimentales compartidas por el usuario. Para mantener trazabilidad y no inventar resultados, no se transcriben métricas ni descripciones específicas hasta contar con los archivos de imagen accesibles en Overleaf o en el repositorio.
+Estas fuentes corresponden a evidencias adicionales de resultados experimentales (gráficas o visualizaciones de evaluación) compartidas por el usuario. Para mantener trazabilidad y no inventar resultados, no se transcriben métricas ni descripciones específicas hasta contar con los archivos de imagen accesibles en Overleaf o en el repositorio.
