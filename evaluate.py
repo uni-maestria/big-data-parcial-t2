@@ -234,14 +234,16 @@ def domain_shift_experiment(
     print("\n" + "="*60)
     print(f"EXPERIMENTO DE DOMAIN SHIFT ({source_name} → {target_name})")
     print("="*60)
-    header = f"{'Métrica':>15} | {source_name:>8} | {target_name:>9} | {'Brecha':>7}"
+    src_w = max(len(source_name), 8)
+    tgt_w = max(len(target_name), 9)
+    header = f"{'Métrica':>15} | {source_name:>{src_w}} | {target_name:>{tgt_w}} | {'Brecha':>7}"
     print(header)
-    print("-" * 50)
+    print("-" * (15 + src_w + tgt_w + 16))
     for key in ["f1", "sensitivity", "specificity", "auc_roc"]:
         src = source_metrics[key]
         tgt = target_metrics[key]
         g   = gap[key]
-        print(f"{key:>15} | {src:>8.4f} | {tgt:>9.4f} | {g:>+7.4f}")
+        print(f"{key:>15} | {src:>{src_w}.4f} | {tgt:>{tgt_w}.4f} | {g:>+7.4f}")
     print("="*60)
 
     return results

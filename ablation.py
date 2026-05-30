@@ -156,12 +156,13 @@ def run_ablation(
 
 def print_ablation_table(df: pd.DataFrame):
     """Imprime una tabla resumen legible del estudio de ablación."""
-    print("\n" + "="*70)
+    TABLE_WIDTH = 70
+    print("\n" + "="*TABLE_WIDTH)
     print("TABLA RESUMEN DEL ESTUDIO DE ABLACIÓN")
-    print("="*70)
+    print("="*TABLE_WIDTH)
     cols = ["experiment_name", "variant", "drive_f1", "drive_auc"]
     print(df[cols].to_string(index=False, float_format="%.4f"))
-    print("="*70)
+    print("="*TABLE_WIDTH)
 
 
 if __name__ == "__main__":
