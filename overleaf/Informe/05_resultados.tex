@@ -1,91 +1,39 @@
 \section{Resultados}
-\subsection{Evaluación en distribución sobre DRIVE}
-La Tabla~\ref{tab:drive-main} resume una corrida representativa del modelo principal definido en el repositorio. Estos valores son consistentes con la configuración base del proyecto y sirven como plantilla editable para el reporte final.
+\subsection{Resultados reportados por ejecución}
 
-\begin{table}[h]
+Esta sección registra únicamente los resultados compartidos por el usuario mediante evidencias gráficas.
+
+\subsubsection{Curva ROC en DRIVE}
+\begin{figure}[h]
 \centering
-\caption{Resultados representativos del modelo principal en DRIVE.}
-\label{tab:drive-main}
-\begin{tabular}{lcccc}
-\toprule
-Modelo & Sensibilidad & Especificidad & F1 & AUC-ROC \\
-\midrule
-Attention U-Net + Combined + CLAHE + TTA & 0.819 & 0.982 & 0.828 & 0.978 \\
-\bottomrule
-\end{tabular}
-\end{table}
+\fbox{\parbox{0.95\linewidth}{
+\textbf{Imagen fuente:} \url{https://github.com/user-attachments/assets/770d79f2-b73b-4a0d-9a78-e795b4baaeb1}\\
+\textbf{Nota:} En este entorno no fue posible descargar el archivo de imagen automáticamente, por lo que se referencia la fuente original.
+}}
+\caption{Curva ROC en DRIVE compartida por el usuario (AUC = 0.8482).}
+\label{fig:roc-drive-user}
+\end{figure}
 
-El patrón principal es una especificidad muy alta y una sensibilidad moderadamente menor, lo que indica que el modelo conserva bien el fondo pero todavía omite vasos débiles. Esto es esperable en segmentación vascular por la baja proporción de píxeles positivos.
+De acuerdo con la figura compartida, el valor reportado es \textbf{AUC = 0.8482}. Además, la curva se mantiene por encima de la diagonal de referencia (clasificador aleatorio), lo que sustenta que el modelo tiene capacidad de discriminación sobre DRIVE.
 
-\subsection{Ablación de función de pérdida}
-\begin{table}[h]
+\subsubsection{Evidencia adicional 2}
+\begin{figure}[h]
 \centering
-\caption{Ablación representativa de funciones de pérdida en DRIVE.}
-\label{tab:loss-ablation}
-\begin{tabular}{lcc}
-\toprule
-Pérdida & F1 (DRIVE) & AUC-ROC (DRIVE) \\
-\midrule
-BCE & 0.809 & 0.968 \\
-Dice & 0.815 & 0.971 \\
-Combinada (0.5 BCE + 0.5 Dice) & 0.824 & 0.976 \\
-Focal & 0.820 & 0.973 \\
-\bottomrule
-\end{tabular}
-\end{table}
+\fbox{\parbox{0.95\linewidth}{
+\textbf{Imagen fuente:} \url{https://github.com/user-attachments/assets/2c587827-7555-4df5-bdb6-5f451d6df114}\\
+\textbf{Estado:} referencia incorporada sin transcribir métricas para evitar inferencias no verificadas.
+}}
+\caption{Segunda evidencia de resultados compartida por el usuario.}
+\label{fig:user-result-2}
+\end{figure}
 
-La pérdida combinada domina porque combina gradientes estables en fondo con una presión directa sobre el solapamiento de regiones vasculares. Focal mejora respecto a BCE puro, pero no supera sistemáticamente a la combinación BCE+Dice bajo esta configuración.
-
-\subsection{Ablación arquitectónica en DRIVE}
-\begin{table}[h]
+\subsubsection{Evidencia adicional 3}
+\begin{figure}[h]
 \centering
-\caption{Comparación representativa entre arquitecturas.}
-\label{tab:arch-ablation}
-\begin{tabular}{lcc}
-\toprule
-Arquitectura & F1 DRIVE & AUC-ROC DRIVE \\
-\midrule
-U-Net & 0.820 & 0.974 \\
-Attention U-Net & 0.828 & 0.978 \\
-U-Net++ & 0.831 & 0.979 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-En DRIVE, Attention U-Net y U-Net++ superan al U-Net base. Attention U-Net ofrece una mejora consistente con menor complejidad adicional, mientras que U-Net++ logra el mejor F1 absoluto con mayor costo computacional.
-
-\subsection{Efecto de estrategias de robustez en DRIVE}
-\begin{table}[h]
-\centering
-\caption{Efecto representativo de preprocesamiento y TTA sobre DRIVE.}
-\label{tab:domain-adaptation}
-\begin{tabular}{lccc}
-\toprule
-Estrategia & F1 & Sensibilidad & AUC-ROC \\
-\midrule
-Sin CLAHE ni TTA & 0.818 & 0.807 & 0.972 \\
-CLAHE & 0.824 & 0.814 & 0.976 \\
-CLAHE + TTA & 0.828 & 0.819 & 0.978 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-La mejora incremental confirma que CLAHE homogeniza el contraste local del árbol vascular y que TTA reduce la varianza de la predicción al promediar distintas vistas geométricas. Ambas estrategias mejoran el desempeño sin modificar la arquitectura base.
-
-\subsection{Análisis cualitativo de fallos}
-\begin{table}[h]
-\centering
-\caption{Desempeño cualitativo representativo por tipo de vaso en DRIVE.}
-\label{tab:vessel-types}
-\begin{tabular}{lcc}
-\toprule
-Tipo de vaso & Recall & F1 \\
-\midrule
-Capilares finos & 0.701 & 0.736 \\
-Vasos medianos & 0.812 & 0.827 \\
-Arterias/venas grandes & 0.903 & 0.914 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Los capilares finos son la categoría más difícil. Desde la arquitectura, esto se explica por tres factores: (i) las operaciones de \emph{pooling} degradan señales de uno o dos píxeles de ancho, (ii) los \emph{skip connections} sin control pueden mezclar ruido con detalle útil, y (iii) la función de pérdida sigue dominada por el fondo incluso después del reequilibrio. En contraste, los vasos gruesos mantienen continuidad espacial y alto contraste, por lo que son más fáciles de recuperar en el decoder.
+\fbox{\parbox{0.95\linewidth}{
+\textbf{Imagen fuente:} \url{https://github.com/user-attachments/assets/d135cf84-55ea-4551-846c-2c80b899da03}\\
+\textbf{Estado:} referencia incorporada sin transcribir métricas para evitar inferencias no verificadas.
+}}
+\caption{Tercera evidencia de resultados compartida por el usuario.}
+\label{fig:user-result-3}
+\end{figure}
